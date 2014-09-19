@@ -36,7 +36,7 @@
                 Gestión Encuestas
             </li>
             <li data-theme="c">
-                <a onclick="manager.getTiposNew();" data-transition="slide">
+                <a onclick="manager.getTiposNew('1');" data-transition="slide">
                     Nueva
                     <span class="ui-li-count">
                         Crear encuesta
@@ -44,7 +44,7 @@
                 </a>
             </li>
             <li data-theme="c">
-                <a onclick="manager.getTipos();" data-transition="slide">
+                <a onclick="manager.getTipos('1');" data-transition="slide">
                     Buscar
                     <span class="ui-li-count">
                         Modificar - Eliminar - Ver Resultados
@@ -71,7 +71,7 @@
     <div data-role="content">       
 	<form id="formBuscar">
 		
-		<fieldset data-role="controlgroup" data-type="horizontal" align="center">
+		<fieldset data-role="controlgroup" data-type="horizontal" align="center" onchange="manager.recargarCategriasIdioma('idioma');">
             <div id="idioma">
             <input id="radio1" name="idioma" value="es" type="radio" checked >
             <label for="radio1">
@@ -80,14 +80,6 @@
             <input id="radio2" name="idioma" value="uk" type="radio">
             <label for="radio2">
                 UK
-            </label>
-            <input id="radio3" name="idioma" value="it" type="radio">
-            <label for="radio3">
-                IT
-            </label>
-            <input id="radio4" name="idioma" value="fr" type="radio">
-            <label for="radio4">
-                FR
             </label>
             </div>
         </fieldset>
@@ -128,22 +120,9 @@
     </div>
     <div data-role="content">       
 	<form id="formBuscar">
-        <div data-role="fieldcontain">  
-            <select id="tipoEncuestaNew" data-new="new" name="tipoEncuestaNew" data-theme="c" data-mini="true">
-                	
-                		<option value="0">Categoría</option> 
-            </select>
-        </div>
-       
-        	Nombre Encuesta:
-			<input type="text" data-new="new" id="subTipoEncuestaNew" name="subTipoEncuestaNew" />
-			Num. preguntas:
-			<input type="number" min="1" maxlength="2" max="10" data-new="new" id="numPreNew" name="numPreNew" pattern="^[0-9]" required/>
-			Fecha caducidad (año-mes-dia):
-			<input type="date" data-new="new" id="fechaCad" name="fechaCad" />
-			            
-       
-        <fieldset data-role="controlgroup" data-type="horizontal">
+		<label align="right">Seleccione el dioma para el que creará la encuesta:</label>
+        <div data-role="fieldcontain" align="center">
+        	<fieldset data-role="controlgroup" data-type="horizontal" onchange="manager.recargarCategriasIdioma('idiomaNew');">
                 <div id="idiomaNew" >
                 <input id="radio1" name="idioma" value="es" type="radio" checked>
                 <label for="radio1">
@@ -153,16 +132,24 @@
                 <label for="radio2">
                     UK
                 </label>
-                <input id="radio3" name="idioma" value="it" type="radio">
-                <label for="radio3">
-                    IT
-                </label>
-                <input id="radio4" name="idioma" value="fr" type="radio">
-                <label for="radio4">
-                    FR
-                </label>
                 </div>
             </fieldset>
+            <div data-role="fieldcontain"></div>
+            <select id="tipoEncuestaNew" data-new="new" name="tipoEncuestaNew" data-theme="c" data-mini="true">
+                	
+                		<option value="0">Categoría</option> 
+            </select>
+        </div>
+       
+        	Introduzca el nombre de la Encuesta:
+			<input type="text" data-new="new" id="subTipoEncuestaNew" name="subTipoEncuestaNew" />
+			Introduzca el número de preugntas que tendrá:
+			<input type="number" min="1" maxlength="2" max="10" data-new="new" id="numPreNew" name="numPreNew" pattern="^[0-9]" required/>
+			Introduzca la fecha de caducidad (año-mes-dia):
+			<input type="date" data-new="new" id="fechaCad" name="fechaCad" />
+			            
+       
+        
         
         <a  data-role="button" onClick="manager.rellenarNueva();" data-theme="c" data-icon="arrow-r" data-iconpos="right"  data-mini="true">Rellenar preguntas</a>
         

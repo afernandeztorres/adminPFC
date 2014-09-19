@@ -32,32 +32,41 @@ var Encuesta = function(){
 	/**
 	 * Funcion que devuelve las categorías de Encuestas.
 	 */
-	this.getTipos = function () {
-		
-		llamadaAjax (this.url + "action=getTipos" , "&idioma=es", 
+	this.getTipos = function (int) {
+		var lang ="";
+		lang = (int == 0)?$("#idioma input:checked").val():"es";
+		//vaciamos el contenido previo.
+		$("#tipoEncuesta").empty();
+		llamadaAjax (this.url + "action=getTipos" , "&idioma="+lang, 
 				function (json){
 						$.each(json, function (index, value){			
 							//...Seteamos el subtipo y comprobamos que el tipo no este repetido 		
 								$("#tipoEncuesta").append("<option  value='"+value.id_TipoEncuesta+"'>"+value.tipo+"</option>");
 								
-						});						
-						$.mobile.changePage("#pageBuscar");
+						});
+						$.mobile.hidePageLoadingMsg("b","Cargando",false);
+						$.mobile.changePage("#pageBuscar");		
 					});
+		
 	};
 		
 	/**
 	 * 
 	 */
-	this.getTiposNew = function () {
-		
-		llamadaAjax (this.url + "action=getTipos" , "&idioma=es", 
+	this.getTiposNew = function (int) {
+		var lang ="";
+		lang = (int == 0)?$("#idiomaNew input:checked").val():"es";
+		//vaciamos el contenido previo.
+		$("#tipoEncuestaNew").empty();
+		llamadaAjax (this.url + "action=getTipos" , "&idioma="+lang,
 				function (json){
 					$.each(json, function (index, value){			
 							//...Seteamos el subtipo y comprobamos que el tipo no este repetido 		
 								$("#tipoEncuestaNew").append("<option  value='"+value.id_TipoEncuesta+"'>"+value.tipo+"</option>");
 								
-						});						
-						$.mobile.changePage("#pageNueva");
+						});
+					$.mobile.hidePageLoadingMsg("b","Cargando",false);
+					$.mobile.changePage("#pageNueva");
 					});
 	};
 	
@@ -66,6 +75,8 @@ var Encuesta = function(){
 	 */
 	this.getSubTipos = function () {
 		
+		//vaciamos el contenido previo
+		$("#subTipoEncuesta").empty();
 		llamadaAjax (this.url + "action=getSubTipos" , "&idioma="+$("#idioma input:checked").val()+"&tipoEncuesta="+$("#tipoEncuesta option:selected").val(), 
 				function (json){
 						$("#subTipoEncuesta").html("");
@@ -278,7 +289,7 @@ var Encuesta = function(){
 				function (json) {
 					$("#graficos").html("");
 					$.each (json.preguntas, function (index, value){
-							
+						
 						var code    =	" <div id='grafico"+index+"' style='width:300px; height:250px;'></div> ";
 						$("#graficos").append( code ) ;
 						var comp = "#grafico"+index;
@@ -311,7 +322,7 @@ var Encuesta = function(){
 									 }
 									);
 
-						var code2    =  "<br><br><p style='padding=10px'></p></br></br>" ; 
+						var code2    =  "<br><br><p style='padding=10px'></p></br></br><p/>" ; 
 						$( comp ).append( code2 ) ;
 				});
 			});
@@ -383,23 +394,33 @@ var Encuesta = function(){
 
 	};
 	 
-	 this.validarNuevaEncuesta = function(){
-		 var isValid = true;
-		 if ($("#tipoEncuestaNew").val() == 0){
-			 jAlert(this.msgCatNotSel, this.tituloVentana);
-			 isValid = false;
-		 } else if ($("#subTipoEncuestaNew").val()== ''){
-			 jAlert(this.msgNomEncInvalid, this.tituloVentana);
-			 isValid = false;
-		 } else if ( ($("#numPreNew").val()<1) || ($("#numPreNew").val()>12) ){
-			 jAlert(this.msgNumPregInvalid, this.tituloVentana);
-			 isValid = false;
-		 } else if ($("#fechaCad").val()==''){
-			 jAlert(this.msgFechCadInvalid, this.tituloVentana);
-			 isValid = false;
-		 };
-		 
-		 return isValid;
-	 };
+	/*
+	 * Funcion para validar el formulario de crear encuesta
+	 */
+	this.validarNuevaEncuesta = function(){
+		var isValid = true;
+		if ($("#tipoEncuestaNew").val() == 0){
+			jAlert(this.msgCatNotSel, this.tituloVentana);
+			isValid = false;
+		} else if ($("#subTipoEncuestaNew").val()== ''){
+			jAlert(this.msgNomEncInvalid, this.tituloVentana);
+			isValid = false;
+		} else if ( ($("#numPreNew").val()<1) || ($("#numPreNew").val()>12) ){
+			jAlert(this.msgNumPregInvalid, this.tituloVentana);
+			isValid = false;
+		} else if ($("#fechaCad").val()==''){
+			jAlert(this.msgFechCadInvalid, this.tituloVentana);
+			isValid = false;
+		};
+		return isValid;
+	};
+	
+	/*
+	 * Funcion que renderiza el idioma en el que se creará la encuesta
+	 */
+	this.recargarCategriasIdioma = function(combo){
+		
+		(combo == 'idioma')?this.getTipos(0):this.getTiposNew(0);
+	}
 }
     
