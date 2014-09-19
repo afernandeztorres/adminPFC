@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <title>ADMIN ONLINE</title>
+  	<meta charset="utf-8" />
+ 	<meta name="viewport" content="width=device-width, initial-scale=1">
+ 	
+ 	<link rel="stylesheet" href="js/lib/jquery.mobile.structure-1.2.0.min.css" /> 
+    <link rel="stylesheet" href="res/themes/estilos.min.css">
+    <link rel="stylesheet" href="res/themes/estilos.css">
+    <link rel="stylesheet" href="res/themes/jquery.alerts.css"  type="text/css" media="screen" />
+    
+	<script src="js/lib/jquery.js" type="text/javascript"></script>
+    <script src="js/lib/jquery.alerts.js" type="text/javascript"></script>
+	<script src="js/lib/jquery.mobile-1.2.0.min.js"></script>
+	<script src="js/encuesta.js"></script>
+	<script src="js/lib/translate2.js"></script>
+	<script src="js/lib/estilos.js"></script>
+	<script src="js/lib/jquery.flot.js"></script>
+	<script src="js/lib/jquery.cookie.js"></script>
+	<script >  var manager = new Encuesta ();</script>
+	
+</head>
+<body>
+<!-- Home -->
+<div data-role="page" id="pageMenu">
+    <div data-theme="a" data-role="header">
+        <h3>
+            ON-ENCUESTAS
+        </h3>
+    </div>
+    <div data-role="content">
+        <ul data-role="listview" data-divider-theme="b" data-inset="true">
+            <li data-role="list-divider" role="heading">
+                Gestión Encuestas
+            </li>
+            <li data-theme="c">
+                <a onclick="manager.getTiposNew();" data-transition="slide">
+                    Nueva
+                    <span class="ui-li-count">
+                        Crear encuesta
+                    </span>
+                </a>
+            </li>
+            <li data-theme="c">
+                <a onclick="manager.getTipos();" data-transition="slide">
+                    Buscar
+                    <span class="ui-li-count">
+                        Modificar - Eliminar - Ver Resultados
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div data-theme="a" data-role="footer" data-position="fixed">
+        <h3>
+            <!-- Pie -->
+        </h3>
+    </div>
+</div>
+
+
+<!--  SubMenu buscar -->
+<div data-role="page" id="pageBuscar">
+    <div id="header" data-theme="a" data-role="header" data-position="fixed">
+        <h3>
+            ON-ENCUESTA
+        </h3>
+    </div>
+    <div data-role="content">       
+	<form id="formBuscar">
+		
+		<fieldset data-role="controlgroup" data-type="horizontal" align="center">
+            <div id="idioma">
+            <input id="radio1" name="idioma" value="es" type="radio" checked >
+            <label for="radio1">
+                ES
+            </label>
+            <input id="radio2" name="idioma" value="uk" type="radio">
+            <label for="radio2">
+                UK
+            </label>
+            <input id="radio3" name="idioma" value="it" type="radio">
+            <label for="radio3">
+                IT
+            </label>
+            <input id="radio4" name="idioma" value="fr" type="radio">
+            <label for="radio4">
+                FR
+            </label>
+            </div>
+        </fieldset>
+	
+        <div data-role="fieldcontain">  
+            <select id="tipoEncuesta" name="tipoEncuesta" data-theme="c" data-mini="true" onChange="manager.getSubTipos();">
+                	
+                		<option value="0">Categoría</option> 
+            </select>
+        </div>
+        <div data-role="fieldcontain">
+            <select id="subTipoEncuesta" name="subTipoEncuesta" data-theme="c" data-mini="true">
+	                
+	                	 <option value="0">Encuesta</option> 
+            </select>
+        </div>
+        
+        <a  data-role="button" onClick="manager.solicitarEncuesta();" data-theme="c" data-icon="arrow-r" data-iconpos="right"  data-mini="true">Modificar</a>
+        <a  data-role="button" onClick="manager.delEncuesta();" data-theme="c" data-icon="arrow-r" data-iconpos="right"  data-mini="true">Eliminar</a>
+        <a  data-role="button" onClick="manager.solicitarGrafico();" data-theme="c" data-icon="arrow-r" data-iconpos="right"  data-mini="true">Ver resultados</a>
+	</form>
+    </div>
+    <div data-theme="a" data-role="footer" data-position="fixed">
+        <h3 id="footer">
+            <!-- pie -->
+        </h3>
+    </div>
+    </div>
+    
+    
+
+<!--  SubMenu Nueva -->
+<div data-role="page" id="pageNueva">
+    <div id="header" data-theme="a" data-role="header" data-position="fixed">
+        <h3>
+            ON-ENCUESTA
+        </h3>
+    </div>
+    <div data-role="content">       
+	<form id="formBuscar">
+        <div data-role="fieldcontain">  
+            <select id="tipoEncuestaNew" data-new="new" name="tipoEncuestaNew" data-theme="c" data-mini="true">
+                	
+                		<option value="0">Categoría</option> 
+            </select>
+        </div>
+       
+        	Nombre Encuesta:
+			<input type="text" data-new="new" id="subTipoEncuestaNew" name="subTipoEncuestaNew" />
+			Num. preguntas:
+			<input type="number" min="1" maxlength="2" max="10" data-new="new" id="numPreNew" name="numPreNew" pattern="^[0-9]" required/>
+			Fecha caducidad (año-mes-dia):
+			<input type="date" data-new="new" id="fechaCad" name="fechaCad" />
+			            
+       
+        <fieldset data-role="controlgroup" data-type="horizontal">
+                <div id="idiomaNew" >
+                <input id="radio1" name="idioma" value="es" type="radio" checked>
+                <label for="radio1">
+                    ES
+                </label>
+                <input id="radio2" name="idioma" value="uk" type="radio">
+                <label for="radio2">
+                    UK
+                </label>
+                <input id="radio3" name="idioma" value="it" type="radio">
+                <label for="radio3">
+                    IT
+                </label>
+                <input id="radio4" name="idioma" value="fr" type="radio">
+                <label for="radio4">
+                    FR
+                </label>
+                </div>
+            </fieldset>
+        
+        <a  data-role="button" onClick="manager.rellenarNueva();" data-theme="c" data-icon="arrow-r" data-iconpos="right"  data-mini="true">Rellenar preguntas</a>
+        
+        
+	</form>
+    </div>
+    <div data-theme="c" data-role="footer" data-position="fixed"> 
+        <h3 id="footer">
+            <!-- pie -->
+        </h3>
+    </div>
+    </div>
+
+
+<!--  grafico -->
+<div data-role="page" id="pageGrafico">
+    <div id="header" data-theme="a" data-role="header" data-position="fixed">
+        <h3>
+            ON-ENCUESTA
+        </h3>
+    </div>
+    <div data-role="content">       
+	<!-- Construccion dinámica de los graficos -->
+    <br> 
+    	<center>
+    		<div id="graficos" style='width:600px; height:500px;' align="center">
+    		<div id="botonInicio"></div>
+       	</center> 
+    </br>
+    </div>
+    </div>
+    <div data-theme="a" data-role="footer" data-position="fixed">
+        <h3 id="footer">
+            <!-- pie -->
+        </h3>
+    </div>
+    </div>    
+</body>
+</html>
