@@ -41,7 +41,8 @@ var Encuesta = function(){
 				function (json){
 						$.each(json, function (index, value){			
 							//...Seteamos el subtipo y comprobamos que el tipo no este repetido 		
-								$("#tipoEncuesta").append("<option  value='"+value.id_TipoEncuesta+"'>"+value.tipo+"</option>");
+								$("#tipoEncuesta").append(
+                                           "<option  value='"+value.id_TipoEncuesta+"'>"+value.tipo+"</option>");
 								
 						});
 						$.mobile.hidePageLoadingMsg("b","Cargando",false);
@@ -117,11 +118,14 @@ var Encuesta = function(){
 		            							'</h3> '+
 		            							'</div> ';
 												
-		            				code    +=	" <input id='pre"+value.id_Pregunta+"' data-mod='mod' name='pre"+value.id_Pregunta+"' type='text' value='"+value.pregunta+"'>"+
+		            				code    +=	" <input id='pre"+value.id_Pregunta+"' data-mod='mod' name='pre"+
+                                                        value.id_Pregunta+"' type='text' value='"+value.pregunta+"'>"+
 		            							"<div data-role='content'>" +
 		            							"<form id='formu"+index+"' name='formu"+index+"' >";
 												$.each(value.respuestas, function(subIndex, subValue){
-													code += "<input id='radio"+subValue.id_Respuesta+"' data-mod='mod' data-theme='c' name='radio"+subValue.id_Respuesta+"' value='"+subValue.respuesta+"' type='input'>";
+													code += "<input id='radio"+subValue.id_Respuesta+"' data-mod='mod' data-theme='c' name='radio"+
+                                                            subValue.id_Respuesta+"' value='"+
+                                                            subValue.respuesta+"' type='input'>";
 												});
 												
 									code    +=  "<br>" ; 
@@ -365,7 +369,7 @@ var Encuesta = function(){
 	}
 	
 	/**
-	 * Llamada ajax gen�rica
+	 * Llamada ajax genérica
 	 */
 	 function llamadaAjax  (url, data, succes){
 	
