@@ -5,24 +5,26 @@
  */
  
 var Encuesta = function(){
-	
+
 	//Url a la que se realizarán las peticiones Ajax
 	this.url= "http://afernandeztorres.ddns.net:8080/Encuestas/doEncuesta?";
 	
 	//Título de la ventana de los mensajes emergentes
-	this.tituloVentana='On-Encuestas';
+	var tituloVentana='On-Encuestas';
 
 	//Textos para los mensajes.
-	this.msgNotSel 			= 'Debe seleccionar una categoría y una encuesta para poder continuar';
-	this.msgCatNotSel 		= 'Debe seleccionar una categoría para poder continuar';
-	this.msgEncEnviadaOK 	= 'La encuesta se ha creado correctamente';
-	this.msgEncEnviadaNOK 	= 'No se ha podido crear la encuesta';
-	this.msgEncModifOK 		= 'La encuesta se ha modificado correctamente';
-	this.msgEncModifNOK 	= 'No se ha podido modificar la encuesta';
-	this.msgErrorGenerico 	= 'Se ha producido un error. Contacte con el administrador';
-	this.msgNumPregInvalid 	= 'Número de preguntas nó valido.(Valores 1-12)';
-	this.msgFechCadInvalid 	= 'La fecha de caducidad no tiene un formato válido.(aaaa/mm/dd)';
-	this.msgNomEncInvalid 	= 'Rellene el nombre de la encuesta';
+	var msgNotSel 			= 'Debe seleccionar una categoría y una encuesta para poder continuar';
+	var msgCatNotSel 		= 'Debe seleccionar una categoría para poder continuar';
+	var msgEncEnviadaOK 	= 'La encuesta se ha creado correctamente';
+	var msgEncEnviadaNOK 	= 'No se ha podido crear la encuesta';
+	var msgEncModifOK 		= 'La encuesta se ha modificado correctamente';
+		var msgEncEliminadaNOK 	= 'Se ha eliminado de forma correcta.';
+    	var msgEncEliminadaOK 		= 'La encuesta se ha eliminado correctamente';
+	var msgEncModifNOK 	= 'No se ha podido modificar la encuesta';
+	var msgErrorGenerico 	= 'Se ha producido un error. Contacte con el administrador';
+	var msgNumPregInvalid 	= 'Número de preguntas nó valido.(Valores 1-12)';
+	var msgFechCadInvalid 	= 'La fecha de caducidad no tiene un formato válido.(aaaa/mm/dd)';
+	var msgNomEncInvalid 	= 'Rellene el nombre de la encuesta';
 	
 	
 	//Importamos la librería de las alertas customizadas incrustando el código en el HTML
@@ -37,6 +39,9 @@ var Encuesta = function(){
 		lang = (int == 0)?$("#idioma input:checked").val():"es";
 		//vaciamos el contenido previo.
 		$("#tipoEncuesta").empty();
+		$("#tipoEncuesta").html("");
+        $("#tipoEncuesta").append(" <option value='0'>Categor&iacute;a</option>  ");
+
 		llamadaAjax (this.url + "action=getTipos" , "&idioma="+lang, 
 				function (json){
 						$.each(json, function (index, value){			
@@ -74,13 +79,13 @@ var Encuesta = function(){
 	 * Función que nos devuleve las encuestas de una categoría.
 	 */
 	this.getSubTipos = function () {
-		
+
 		//vaciamos el contenido previo
 		$("#subTipoEncuesta").empty();
 		llamadaAjax (this.url + "action=getSubTipos" , "&idioma="+$("#idioma input:checked").val()+"&tipoEncuesta="+$("#tipoEncuesta option:selected").val(), 
 				function (json){
 						$("#subTipoEncuesta").html("");
-						$("#subTipoEncuesta").append(" <option value='0'>Subtipo encuesta</option>  ");
+						$("#subTipoEncuesta").append(" <option value='0'>Encuesta</option>  ");
 						$.each(json, function (index, value){			
 							//...Seteamos el subtipo y comprobamos que el tipo no este repetido 
 								
@@ -158,15 +163,23 @@ var Encuesta = function(){
 				return false;
 			}
 			
-			llamadaAjax (this.url + "action=modServer" , $("input[data-mod=mod]").serialize() + "&idioma=" + $("#idiomaNew input:checked").val(), 
-					
+			llamadaAjax (this.url + "action=modServer" , $("input[data-mod=mod]").serialize() + "&idioma=" + $("#idiomaNew input:checked").val(),
 					function (json) {
-						if (json.error === "ok")
-							alert("La encuesta se ha modificado correctamente.");
-						else
-							alert("No se puede modificar la encuesta.");
-							
-					location.reload();
+
+
+						if (json.error === "ok"){
+						    $.mobile.hidePageLoadingMsg();
+						    jAlert(msgEncModifOK, tituloVentana, function(r) {
+                                location.reload();
+                            });
+						}
+						else{
+							 $.mobile.hidePageLoadingMsg();
+                                jAlert(msgEncModifKO, tituloVentana, function(r) {
+                                    location.reload();
+                                });
+							}
+
 					});
 	};
 	/**
@@ -233,12 +246,18 @@ var Encuesta = function(){
 		llamadaAjax (this.url + "action=addServer" , $("input[data-new=new]").serialize() + "&tipoEncuestaNew=" + $("select[data-new=new] option:selected").val() + "&idioma=" + $("#idiomaNew input:checked").val(), 
 				
 				function (json) {
-					if (json.error === "ok")
-						jAlert(this.msgEncEnviadaOK, this.tituloVentana);
-					else
-						jAlert(this.msgEncEnviadaNOK, this.tituloVentana);
-						
-				location.reload();
+					if (json.error === "ok"){
+                    						    $.mobile.hidePageLoadingMsg();
+                    						    jAlert(msgEncEnviadaOK, tituloVentana, function(r) {
+                                                    location.reload();
+                                                });
+                    						}
+                    						else{
+                    							 $.mobile.hidePageLoadingMsg();
+                                                    jAlert(msgEncEnviadaKO, tituloVentana, function(r) {
+                                                        location.reload();
+                                                    });
+                    							}
 				});
 	};
 		
@@ -256,11 +275,17 @@ var Encuesta = function(){
 			llamadaAjax (this.url + "action=delServer" , $("#subTipoEncuesta").serialize(), 						
 				function (json) {
 					if (json.error === "ok"){
-						jAlert(this.msgEncModifOK, this.tituloVentana);
-						this.irInicio();
-					}else{
-						jAlert(this.msgEncModifNOK, this.tituloVentana);
-					}
+                            $.mobile.hidePageLoadingMsg();
+                            jAlert(msgEncEliminadaOK, tituloVentana, function(r) {
+                                location.reload();
+                            });
+                        }
+                        else{
+                             $.mobile.hidePageLoadingMsg();
+                                jAlert(msgEncEliminadaKO, tituloVentana, function(r) {
+                                    location.reload();
+                                });
+                            }
 				});
 		}
 	};
