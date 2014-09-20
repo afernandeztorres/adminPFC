@@ -25,7 +25,7 @@ var Encuesta = function(){
 	var msgNumPregInvalid 	= 'Número de preguntas nó valido.(Valores 1-12)';
 	var msgFechCadInvalid 	= 'La fecha de caducidad no tiene un formato válido.(aaaa/mm/dd)';
 	var msgNomEncInvalid 	= 'Rellene el nombre de la encuesta';
-	
+    var msgEncEnviadaKO = 'No se puede crear la encuesta.';
 	
 	//Importamos la librería de las alertas customizadas incrustando el código en el HTML
 	document.write('<script src="js/lib/jquery.alerts.js" type="text/javascript"><\/script>');
@@ -103,7 +103,7 @@ var Encuesta = function(){
 	this.solicitarEncuesta = function (local) {	
 	
 			if ($("#tipoEncuesta").val() == 0 || $("#subTipoEncuesta").val() == 0 ) {
-				jAlert(this.msgNotSel, this.tituloVentana); 
+				jAlert(msgNotSel, tituloVentana);
 				return false;
 			} else {
 			
@@ -159,7 +159,7 @@ var Encuesta = function(){
 	this.sendEncuestaMod = function (){
 			
 			if ($("#tipoEncuesta").val() == 0 || $("#subTipoEncuesta").val() == 0 ) {
-				jAlert(this.msgNotSel, this.tituloVentana); 
+				jAlert(msgNotSel, tituloVentana);
 				return false;
 			}
 			
@@ -242,22 +242,22 @@ var Encuesta = function(){
 	 *  Bot�n enviar encuesta
 	 */
 	this.sendEncuesta = function (){
-							
+
 		llamadaAjax (this.url + "action=addServer" , $("input[data-new=new]").serialize() + "&tipoEncuestaNew=" + $("select[data-new=new] option:selected").val() + "&idioma=" + $("#idiomaNew input:checked").val(), 
 				
 				function (json) {
 					if (json.error === "ok"){
-                    						    $.mobile.hidePageLoadingMsg();
-                    						    jAlert(msgEncEnviadaOK, tituloVentana, function(r) {
-                                                    location.reload();
-                                                });
-                    						}
-                    						else{
-                    							 $.mobile.hidePageLoadingMsg();
-                                                    jAlert(msgEncEnviadaKO, tituloVentana, function(r) {
-                                                        location.reload();
-                                                    });
-                    							}
+                            $.mobile.hidePageLoadingMsg();
+                            jAlert(msgEncEnviadaOK, tituloVentana, function(r) {
+                                location.reload();
+                            });
+                        }
+                        else{
+                             $.mobile.hidePageLoadingMsg();
+                                jAlert(msgEncEnviadaKO, tituloVentana, function(r) {
+                                    location.reload();
+                                });
+                            }
 				});
 	};
 		
@@ -306,7 +306,7 @@ var Encuesta = function(){
 	this.solicitarGrafico = function () {	
 		
 		if ($("#tipoEncuesta").val() == 0 || $("#subTipoEncuesta").val() == 0 ) {
-			jAlert(this.msgNotSel, this.tituloVentana); 
+			jAlert(msgNotSel, tituloVentana);
 			return false;
 		} else {
 			llamadaAjax (this.url + "action=grafico" , "&tipoEncuesta=" + $("#tipoEncuesta").val() + "&subTipoEncuesta=" + $("#subTipoEncuesta").val() + "&idioma=" + $("#idioma input:checked").val() , 
@@ -365,7 +365,7 @@ var Encuesta = function(){
 	 */
 	function errorGenerico(){
 		
-		jAlert(this.msgErrorGenerico, this.tituloVentana); 
+		jAlert(msgErrorGenerico, tituloVentana);
 		$.mobile.hidePageLoadingMsg("b","Cargando",true);
 	}
 	
@@ -425,16 +425,16 @@ var Encuesta = function(){
 	this.validarNuevaEncuesta = function(){
 		var isValid = true;
 		if ($("#tipoEncuestaNew").val() == 0){
-			jAlert(this.msgCatNotSel, this.tituloVentana);
+			jAlert(msgCatNotSel, tituloVentana);
 			isValid = false;
 		} else if ($("#subTipoEncuestaNew").val()== ''){
-			jAlert(this.msgNomEncInvalid, this.tituloVentana);
+			jAlert(msgNomEncInvalid, tituloVentana);
 			isValid = false;
 		} else if ( ($("#numPreNew").val()<1) || ($("#numPreNew").val()>12) ){
-			jAlert(this.msgNumPregInvalid, this.tituloVentana);
+			jAlert(msgNumPregInvalid, tituloVentana);
 			isValid = false;
 		} else if ($("#fechaCad").val()==''){
-			jAlert(this.msgFechCadInvalid, this.tituloVentana);
+			jAlert(msgFechCadInvalid, tituloVentana);
 			isValid = false;
 		};
 		return isValid;
