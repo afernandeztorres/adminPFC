@@ -26,7 +26,8 @@ var Encuesta = function(){
 	var msgFechCadInvalid 	= 'La fecha de caducidad no tiene un formato válido.(aaaa/mm/dd)';
 	var msgNomEncInvalid 	= 'Rellene el nombre de la encuesta';
     var msgEncEnviadaKO = 'No se puede crear la encuesta.';
-	
+
+	this.j = 3; //num respuesta
 	//Importamos la librería de las alertas customizadas incrustando el código en el HTML
 	document.write('<script src="js/lib/jquery.alerts.js" type="text/javascript"><\/script>');
 	
@@ -197,12 +198,14 @@ var Encuesta = function(){
     							'	ON-ENCUESTAS  '+
     							'</h3> '+
     							'</div> ';
-								
+                    code    +=	' <div style="margin:10px"><label align="right">Introduzca la pregunta:</label></div>';
     				code    +=	" <input id='pre"+i+"' data-new='new' name='pre"+i+"' type='text' value=''>"+
     							"<div data-role='content'>" ;
-    						
+    				code    +=	' <div style="margin:10px"><label align="right">Introduzca las respuestas:</label></div>';
 					code    +=  "<div id='preg"+i+"'>"+
+					                ' <div style="margin:10px"><label align="right">Respuesta 1:</label></div>'+
 									"<input id='radio_"+i+"_1' data-new='new' data-theme='c' name='radio_"+i+"_1' value='' type='input'>"+
+									' <div style="margin:10px"><label align="right">Respuesta 2:</label></div>'+
 									"<input id='radio_"+i+"_2' data-new='new' data-theme='c' name='radio_"+i+"_2' value='' type='input'>"+
 								"</div>"+
 								"<a data-role='button' data-theme='c' data-icon='add' data-iconpos='bottom' onClick='manager.addResp(\""+i+"\");'></a>";
@@ -232,9 +235,8 @@ var Encuesta = function(){
 	 * 
 	 */
 	this.addResp = function (i){
-		
-		$("#preg"+i).append("<input id='radio_"+i+"_"+($("#preg"+i+" input").length+1)+"' data-new='new' data-theme='c' name='radio_"+i+"_"+($("#preg"+i+" input").length+1)+"' value='' type='input'>");
-		
+		$("#preg"+i).append("<div style='margin:10px'><label align='right'>Respuesta "+(this.j++)+":</label></div><input id='radio_"+i+"_"+($("#preg"+i+" input").length+1)+"' data-new='new' data-theme='c' name='radio_"+i+"_"+($("#preg"+i+" input").length+1)+"' value='' type='input'>");
+
 	};
 	
 	
