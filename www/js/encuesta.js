@@ -7,7 +7,7 @@
 var Encuesta = function(){
 
 	//Url a la que se realizarán las peticiones Ajax
-	this.url= "http://afernandeztorres.ddns.net:8080/Encuestas/doEncuesta?";
+	var url= "http://afernandeztorres.ddns.net:8080/Encuestas/doEncuesta?";
 	
 	//Título de la ventana de los mensajes emergentes
 	var tituloVentana='On-Encuestas';
@@ -18,14 +18,16 @@ var Encuesta = function(){
 	var msgEncEnviadaOK 	= 'La encuesta se ha creado correctamente';
 	var msgEncEnviadaNOK 	= 'No se ha podido crear la encuesta';
 	var msgEncModifOK 		= 'La encuesta se ha modificado correctamente';
-		var msgEncEliminadaNOK 	= 'Se ha eliminado de forma correcta.';
-    	var msgEncEliminadaOK 		= 'La encuesta se ha eliminado correctamente';
-	var msgEncModifNOK 	= 'No se ha podido modificar la encuesta';
+	var msgEncEliminadaNOK 	= 'Se ha eliminado de forma correcta.';
+    var msgEncEliminadaOK 	= 'La encuesta se ha eliminado correctamente';
+	var msgEncModifNOK 	    = 'No se ha podido modificar la encuesta';
 	var msgErrorGenerico 	= 'Se ha producido un error. Contacte con el administrador';
 	var msgNumPregInvalid 	= 'Número de preguntas nó valido.(Valores 1-12)';
 	var msgFechCadInvalid 	= 'La fecha de caducidad no tiene un formato válido.(aaaa/mm/dd)';
 	var msgNomEncInvalid 	= 'Rellene el nombre de la encuesta';
-    var msgEncEnviadaKO = 'No se puede crear la encuesta.';
+    var msgEncEnviadaKO     = 'No se puede crear la encuesta.';
+    var msgConfirmElim      = '¿Está seguro de eliminar la encuesta?';
+
 
 	this.j = 3; //num respuesta
 	//Importamos la librería de las alertas customizadas incrustando el código en el HTML
@@ -43,7 +45,7 @@ var Encuesta = function(){
 		$("#tipoEncuesta").html("");
         $("#tipoEncuesta").append(" <option value='0'>Categor&iacute;a</option>  ");
 
-		llamadaAjax (this.url + "action=getTipos" , "&idioma="+lang, 
+		llamadaAjax (url + "action=getTipos" , "&idioma="+lang,
 				function (json){
 						$.each(json, function (index, value){			
 							//...Seteamos el subtipo y comprobamos que el tipo no este repetido 		
@@ -65,7 +67,7 @@ var Encuesta = function(){
 		lang = (int == 0)?$("#idiomaNew input:checked").val():"es";
 		//vaciamos el contenido previo.
 		$("#tipoEncuestaNew").empty();
-		llamadaAjax (this.url + "action=getTipos" , "&idioma="+lang,
+		llamadaAjax (url + "action=getTipos" , "&idioma="+lang,
 				function (json){
 					$.each(json, function (index, value){			
 							//...Seteamos el subtipo y comprobamos que el tipo no este repetido 		
@@ -84,7 +86,7 @@ var Encuesta = function(){
 
 		//vaciamos el contenido previo
 		$("#subTipoEncuesta").empty();
-		llamadaAjax (this.url + "action=getSubTipos" , "&idioma="+$("#idioma input:checked").val()+"&tipoEncuesta="+$("#tipoEncuesta option:selected").val(), 
+		llamadaAjax (url + "action=getSubTipos" , "&idioma="+$("#idioma input:checked").val()+"&tipoEncuesta="+$("#tipoEncuesta option:selected").val(),
 				function (json){
 						$("#subTipoEncuesta").html("");
 						$("#subTipoEncuesta").append(" <option value='0'>Encuesta</option>  ");
@@ -109,7 +111,7 @@ var Encuesta = function(){
 				return false;
 			} else {
 			
-				llamadaAjax (this.url + "action=find" , $("#formBuscar").serialize()  , 
+				llamadaAjax (url + "action=find" , $("#formBuscar").serialize()  ,
 						
 						function (json) {
 							
@@ -123,12 +125,13 @@ var Encuesta = function(){
 		            							'	ON-ENCUESTAS  '+
 		            							'</h3> '+
 		            							'</div> ';
-												
+                                    code    +=	'<div style="margin:10px"><label align="right">Modifique la pregunta:</label></div>';
 		            				code    +=	" <input id='pre"+value.id_Pregunta+"' data-mod='mod' name='pre"+
                                                         value.id_Pregunta+"' type='text' value='"+value.pregunta+"'>"+
 		            							"<div data-role='content'>" +
 		            							"<form id='formu"+index+"' name='formu"+index+"' >";
 												$.each(value.respuestas, function(subIndex, subValue){
+                                                    code +=	"<div style=\"margin:10px\"><label align=\"right\">Modifique la respuesta "+( subIndex+1 )+" :</label></div>";
 													code += "<input id='radio"+subValue.id_Respuesta+"' data-mod='mod' data-theme='c' name='radio"+
                                                             subValue.id_Respuesta+"' value='"+
                                                             subValue.respuesta+"' type='input'>";
@@ -168,7 +171,7 @@ var Encuesta = function(){
 				return false;
 			}
 			
-			llamadaAjax (this.url + "action=modServer" , $("input[data-mod=mod]").serialize() + "&idioma=" + $("#idiomaNew input:checked").val(),
+			llamadaAjax (url + "action=modServer" , $("input[data-mod=mod]").serialize() + "&idioma=" + $("#idiomaNew input:checked").val(),
 					function (json) {
 
 
@@ -177,13 +180,12 @@ var Encuesta = function(){
 						    jAlert(msgEncModifOK, tituloVentana, function(r) {
                                 location.reload();
                             });
+						} else {
+							$.mobile.hidePageLoadingMsg();
+                            jAlert(msgEncModifKO, tituloVentana, function(r) {
+                                location.reload();
+                            });
 						}
-						else{
-							 $.mobile.hidePageLoadingMsg();
-                                jAlert(msgEncModifKO, tituloVentana, function(r) {
-                                    location.reload();
-                                });
-							}
 
 					});
 	};
@@ -249,7 +251,7 @@ var Encuesta = function(){
 	 */
 	this.sendEncuesta = function (){
 
-		llamadaAjax (this.url + "action=addServer" , $("input[data-new=new]").serialize() + "&tipoEncuestaNew=" + $("select[data-new=new] option:selected").val() + "&idioma=" + $("#idiomaNew input:checked").val(), 
+		llamadaAjax (url + "action=addServer" , $("input[data-new=new]").serialize() + "&tipoEncuestaNew=" + $("select[data-new=new] option:selected").val() + "&idioma=" + $("#idiomaNew input:checked").val(),
 				
 				function (json) {
 					if (json.error === "ok"){
@@ -275,24 +277,33 @@ var Encuesta = function(){
 			
 		if ($("#tipoEncuesta").val() == 0 || $("#subTipoEncuesta").val() == 0 ) {
 			
-			jAlert(this.msgNotSel, this.tituloVentana); 
+			jAlert(msgNotSel, tituloVentana);
 			return false;
 		} else {
-			llamadaAjax (this.url + "action=delServer" , $("#subTipoEncuesta").serialize(), 						
-				function (json) {
-					if (json.error === "ok"){
-                            $.mobile.hidePageLoadingMsg();
-                            jAlert(msgEncEliminadaOK, tituloVentana, function(r) {
-                                location.reload();
-                            });
-                        }
-                        else{
-                             $.mobile.hidePageLoadingMsg();
-                                jAlert(msgEncEliminadaKO, tituloVentana, function(r) {
-                                    location.reload();
-                                });
-                            }
-				});
+            jConfirm(msgConfirmElim, tituloVentana,
+                function (click){
+                    if (click){
+                        llamadaAjax(url + "action=delServer", $("#subTipoEncuesta").serialize(),
+                         function (json) {
+                             if (json.error === "ok") {
+                                 $.mobile.hidePageLoadingMsg();
+                                 jAlert(msgEncEliminadaOK, tituloVentana, function (r) {
+                                     $.mobile.changePage( "#pageMenu" );
+                                     location.reload();
+                                     });
+                             }
+                             else {
+                                 $.mobile.hidePageLoadingMsg();
+                                 jAlert(msgEncEliminadaKO, tituloVentana, function (r) {
+                                     $.mobile.changePage( "#pageMenu" );
+                                     location.reload();
+                                 });
+                             }
+                         })
+
+                    };
+                }
+            );
 		}
 	};
 		
@@ -309,60 +320,64 @@ var Encuesta = function(){
 	/**
 	 * Solicitar encuesta
 	 */
-	this.solicitarGrafico = function () {	
+	this.solicitarGrafico = function () {
+
+        var res = false;
 		
 		if ($("#tipoEncuesta").val() == 0 || $("#subTipoEncuesta").val() == 0 ) {
 			jAlert(msgNotSel, tituloVentana);
-			return false;
+			res = false;
 		} else {
-			llamadaAjax (this.url + "action=grafico" , "&tipoEncuesta=" + $("#tipoEncuesta").val() + "&subTipoEncuesta=" + $("#subTipoEncuesta").val() + "&idioma=" + $("#idioma input:checked").val() , 
-					
-				function (json) {
-					$("#graficos").html("");
-					$.each (json.preguntas, function (index, value){
-						
-						var code    =	" <div id='grafico"+index+"' style='width:300px; height:250px;'></div> ";
-						$("#graficos").append( code ) ;
-						var comp = "#grafico"+index;
-						var pre  = value.pregunta;
-						var dataData = [];
-						var dataAxis = [];
-									$.each(value.respuestas, function(subIndex, subValue){
-										
-										dataData.push ([subValue.id_Respuesta, subValue.contador]);
-										dataAxis.push ([subValue.id_Respuesta, subValue.respuesta]);
-									});
-									
-									$.plot(
-									   $(comp),
-									   [
-									    {
-									      label: pre,
-									      data: dataData,
-									      bars: {
-									        show: true,
-									        barWidth: 0.2,
-									        align: "center"
-									      }   
-									    }
-									 ],
-									 {
-									   xaxis: {
-									     ticks: dataAxis
-									   }   
-									 }
-									);
 
-						var code2    =  "<br><br><p style='padding=10px'></p></br></br><p/>" ; 
-						$( comp ).append( code2 ) ;
-				});
-			});
-				
-			var inicio = "<br><br><a data-role='button' data-icon='check' data-iconpos='bottom' data-theme='c' onClick='manager.irInicio();'>Volver</a></br></br>";	
-			$("#botonInicio").append( inicio ) ;							
-			$.mobile.changePage( "#pageGrafico" );
-			return true;
+            var estLocal = 'c';
+            var idioma ="es";
+
+            llamadaAjax (url + "action=grafico" , "&tipoEncuesta=" + $("#tipoEncuesta").val() + "&subTipoEncuesta=" + $("#subTipoEncuesta").val() + "&idioma=" + idioma ,
+
+                function (json) {
+                    $("#graficos").html("");
+                    $.each (json.preguntas, function (index, value){
+
+                        var code    =	" <br><center> <div id='grafico"+index+"' style='width:400px; height:225px;'></div> </center></br>";
+                        $("#graficos").append( code ) ;
+                        var comp = "#grafico"+index;
+                        var pre  = value.pregunta;
+                        var dataData = [];
+                        var dataAxis = [];
+                        $.each(value.respuestas, function(subIndex, subValue){
+
+                            dataData.push ([subValue.id_Respuesta, subValue.contador]);
+                            dataAxis.push ([subValue.id_Respuesta, subValue.respuesta]);
+                        });
+
+                        $.plot(
+                            $(comp),
+                            [
+                                {
+                                    label: pre,
+                                    data: dataData,
+                                    bars: {
+                                        show: true,
+                                        barWidth: 0.1,
+                                        align: "center"
+                                    }
+                                }
+                            ],
+                            {
+                                xaxis: {
+                                    ticks: dataAxis
+                                }
+                            }
+                        );
+
+                        var code2     =  "<br><br><p style='padding=10px'></p><br><br>" ;
+                        $( comp ).append( code2 ) ;
+                    });
+                });
+            $.mobile.changePage( "#pageGrafico" );
+            res = true;
 		}
+        return res;
 	};
 
 

@@ -71,8 +71,9 @@
     <div data-role="content">       
 	<form id="formBuscar">
 		
-		<fieldset data-role="controlgroup" data-type="horizontal" align="center" onchange="manager.recargarCategriasIdioma('idioma');">
+		<fieldset data-role="controlgroup" data-type="horizontal" align="left" onchange="manager.recargarCategriasIdioma('idioma');">
             <div id="idioma">
+            <div style="margin:10px"><label align="left">Seleccione el idioma de la encuesta</label></div>
             <input id="radio1" name="idioma" value="es" type="radio" checked >
             <label for="radio1">
                 ES
@@ -145,7 +146,7 @@
 			<input type="text" data-new="new" id="subTipoEncuestaNew" name="subTipoEncuestaNew" />
 			Introduzca el número de preugntas que tendrá:
 			<input type="number" min="1" maxlength="2" max="10" data-new="new" id="numPreNew" name="numPreNew" pattern="^[0-9]" required/>
-			Introduzca la fecha de caducidad (año-mes-dia):
+			Introduzca la fecha de caducidad (día/mes/año):
 			<input type="date" data-new="new" id="fechaCad" name="fechaCad" />
 			            
        
@@ -173,14 +174,10 @@
     </div>
     <div data-role="content">       
 	<!-- Construccion dinámica de los graficos -->
-    <br> 
-    	<center>
-    		<div id="graficos" style='width:600px; height:500px;' align="center">
-    		<div id="botonInicio"></div>
-       	</center> 
-    </br>
+    <br>
+    		<div id="graficos" style='width:600px; height:500px;' align="center"></div>
     </div>
-    </div>
+    <div><a  data-role="button" onClick="manager.irInicio();" data-theme="c" ddata-icon="check" data-iconpos="right"  data-mini="true">Volver</a></div>
     <div data-theme="a" data-role="footer" data-position="fixed">
         <h3 id="footer">
             <!-- pie -->
