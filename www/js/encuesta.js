@@ -323,16 +323,16 @@ var Encuesta = function(){
 	this.solicitarGrafico = function () {
 
         var res = false;
-		
+
 		if ($("#tipoEncuesta").val() == 0 || $("#subTipoEncuesta").val() == 0 ) {
 			jAlert(msgNotSel, tituloVentana);
 			res = false;
 		} else {
 
             var estLocal = 'c';
-            var idioma ="es";
+            var idioma ='es';
 
-            llamadaAjax (url + "action=grafico" , "&tipoEncuesta=" + $("#tipoEncuesta").val() + "&subTipoEncuesta=" + $("#subTipoEncuesta").val() + "&idioma=" + idioma ,
+            llamadaAjax (url + "action=grafico" , "&tipoEncuesta=" + $("#tipoEncuesta").val() + "&subTipoEncuesta=" + $("#subTipoEncuesta").val() + "&idioma=" + $("#idioma input:checked").val() ,
 
                 function (json) {
                     $("#graficos").html("");
